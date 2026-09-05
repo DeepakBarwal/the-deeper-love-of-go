@@ -1,23 +1,15 @@
 package main
 
-import "fmt"
-
-type Book struct {
-	Title  string
-	Author string
-	Copies int
-}
+import (
+	"books/books"
+	"fmt"
+)
 
 func main() {
-	book := Book{
+	book := books.Book{
 		Title:  "Engineering in Plain Sight",
 		Author: "Grady Hillhouse",
 		Copies: 2,
 	}
-	fmt.Println(BookToString(book))
-}
-
-func BookToString(book Book) string {
-	return fmt.Sprintf("%v by %v - %v copies",
-		book.Title, book.Author, book.Copies)
+	fmt.Println(books.BookToString(book))
 }
