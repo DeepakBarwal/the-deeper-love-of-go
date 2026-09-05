@@ -1,6 +1,8 @@
 package books
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Book struct {
 	Title  string
@@ -11,4 +13,21 @@ type Book struct {
 func BookToString(book Book) string {
 	return fmt.Sprintf("%v by %v - %v copies",
 		book.Title, book.Author, book.Copies)
+}
+
+var catalog = []Book{
+	{
+		Title:  "In the Company of Cheerful Ladies",
+		Author: "Alexander McCall Smith",
+		Copies: 1,
+	},
+	{
+		Title:  "White Heat",
+		Author: "Dominic Sandbrook",
+		Copies: 2,
+	},
+}
+
+func GetAllBooks() []Book {
+	return catalog
 }
