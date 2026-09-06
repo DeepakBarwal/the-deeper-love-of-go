@@ -6,7 +6,8 @@ import (
 )
 
 func main() {
-	for _, book := range books.GetAllBooks() {
+	catalog := books.GetCatalog()
+	for _, book := range books.GetAllBooks(catalog) {
 		fmt.Println(books.BookToString(book))
 	}
 }
