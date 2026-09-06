@@ -2,6 +2,8 @@ package books
 
 import (
 	"fmt"
+	"maps"
+	"slices"
 )
 
 type Book struct {
@@ -16,14 +18,14 @@ func BookToString(book Book) string {
 		book.Title, book.Author, book.Copies)
 }
 
-var catalog = []Book{
-	{
+var catalog = map[string]Book{
+	"abc": {
 		Title:  "In the Company of Cheerful Ladies",
 		Author: "Alexander McCall Smith",
 		Copies: 1,
 		ID:     "abc",
 	},
-	{
+	"xyz": {
 		Title:  "White Heat",
 		Author: "Dominic Sandbrook",
 		Copies: 2,
@@ -32,14 +34,11 @@ var catalog = []Book{
 }
 
 func GetAllBooks() []Book {
-	return catalog
+	books := maps.Values(catalog)
+	return slices.Collect(books)
 }
 
 func GetBook(ID string) (Book, bool) {
-	for _, book := range catalog {
-		if book.ID == ID {
-			return book, true
-		}
-	}
-	return Book{}, false
+	book, ok := catalog[ID]
+	return book, ok
 }

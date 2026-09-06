@@ -2,6 +2,7 @@ package books_test
 
 import (
 	"books/books"
+	"cmp"
 	"slices"
 	"testing"
 )
@@ -37,6 +38,9 @@ func TestGetAllBooks_ReturnsAllBooks(t *testing.T) {
 		},
 	}
 	got := books.GetAllBooks()
+	slices.SortFunc(got, func(a, b books.Book) int {
+		return cmp.Compare(a.Author, b.Author)
+	})
 	if !slices.Equal(want, got) {
 		t.Fatalf("want %#v, got %#v", want, got)
 	}
