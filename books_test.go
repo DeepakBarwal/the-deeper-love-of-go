@@ -15,7 +15,7 @@ func TestBookToString_FormatsBookInfoAsString(t *testing.T) {
 		Copies: 2,
 	}
 	want := "Sea Room by Adam Nicolson - 2 copies"
-	got := books.BookToString(input)
+	got := input.String()
 	if want != got {
 		t.Fatalf("want %q, got %q", want, got)
 	}
