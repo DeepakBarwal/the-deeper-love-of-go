@@ -18,8 +18,10 @@ func (book Book) String() string {
 		book.Title, book.Author, book.Copies)
 }
 
-func GetCatalog() map[string]Book {
-	return map[string]Book{
+type Catalog map[string]Book
+
+func GetCatalog() Catalog {
+	return Catalog{
 		"abc": {
 			Title:  "In the Company of Cheerful Ladies",
 			Author: "Alexander McCall Smith",
@@ -35,16 +37,16 @@ func GetCatalog() map[string]Book {
 	}
 }
 
-func GetAllBooks(catalog map[string]Book) []Book {
+func (catalog Catalog) GetAllBooks() []Book {
 	books := maps.Values(catalog)
 	return slices.Collect(books)
 }
 
-func GetBook(catalog map[string]Book, ID string) (Book, bool) {
+func (catalog Catalog) GetBook(ID string) (Book, bool) {
 	book, ok := catalog[ID]
 	return book, ok
 }
 
-func AddBook(catalog map[string]Book, book Book) {
+func (catalog Catalog) AddBook(book Book) {
 	catalog[book.ID] = book
 }

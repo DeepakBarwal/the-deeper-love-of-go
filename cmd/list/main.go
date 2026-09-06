@@ -7,7 +7,7 @@ import (
 
 func main() {
 	catalog := books.GetCatalog()
-	for _, book := range books.GetAllBooks(catalog) {
+	for _, book := range catalog.GetAllBooks() {
 		fmt.Println(book)
 	}
 }
