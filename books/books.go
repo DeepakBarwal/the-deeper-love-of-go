@@ -50,3 +50,11 @@ func (catalog Catalog) GetBook(ID string) (Book, bool) {
 func (catalog Catalog) AddBook(book Book) {
 	catalog[book.ID] = book
 }
+
+func (book *Book) SetCopies(copies int) error {
+	if copies < 0 {
+		return fmt.Errorf("begative number of copies: %d", copies)
+	}
+	book.Copies = copies // actually does (*book).Copies = copies
+	return nil
+}
