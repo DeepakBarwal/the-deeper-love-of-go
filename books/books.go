@@ -32,8 +32,13 @@ func (catalog Catalog) GetBook(ID string) (Book, bool) {
 	return book, ok
 }
 
-func (catalog Catalog) AddBook(book Book) {
+func (catalog Catalog) AddBook(book Book) error {
+	_, ok := catalog[book.ID]
+	if ok {
+		return fmt.Errorf("ID %q already exists", book.ID)
+	}
 	catalog[book.ID] = book
+	return nil
 }
 
 func (book *Book) SetCopies(copies int) error {
@@ -56,4 +61,30 @@ func OpenCatalog(path string) (Catalog, error) {
 		return nil, err
 	}
 	return catalog, nil
+}
+
+func (catalog Catalog) Sync(path string) error {
+	file, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	err = json.NewEncoder(file).Encode(catalog)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (catalog Catalog) SetCopies(ID string, copies int) error {
+	book, ok := catalog[ID]
+	if !ok {
+		return fmt.Errorf("ID %q not found", ID)
+	}
+	err := book.SetCopies(copies)
+	if err != nil {
+		return err
+	}
+	catalog[ID] = book
+	return nil
 }
