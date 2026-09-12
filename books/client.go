@@ -67,3 +67,13 @@ func (client *Client) GetCopies(ID string) (int, error) {
 	}
 	return copies, nil
 }
+
+func (client *Client) AddCopies(ID string, copies int) (int, error) {
+	URI := fmt.Sprintf("/addcopies/%s/%d", ID, copies)
+	stock := 0
+	err := client.MakeAPIRequest(URI, &stock)
+	if err != nil {
+		return 0, err
+	}
+	return stock, nil
+}

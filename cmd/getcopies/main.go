@@ -18,5 +18,5 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Printf("%d copies in stock", copies)
+	fmt.Printf("%d copies in stock\n", copies)
 }
