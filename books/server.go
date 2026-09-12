@@ -29,5 +29,18 @@ func ListenAndServe(addr string, catalog *Catalog) error {
 				panic(err)
 			}
 		})
+	mux.HandleFunc("/v1/getcopies/{id}",
+		func(w http.ResponseWriter, r *http.Request) {
+			ID := r.PathValue("id")
+			copies, err := catalog.GetCopies(ID)
+			if err != nil {
+				http.Error(w, fmt.Sprintf("%q not found", ID), http.StatusNotFound)
+				return
+			}
+			err = json.NewEncoder(w).Encode(copies)
+			if err != nil {
+				panic(err)
+			}
+		})
 	return http.ListenAndServe(addr, mux)
 }

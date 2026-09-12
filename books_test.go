@@ -398,3 +398,24 @@ func TestGetAllBooks_OnClientListsAllBooks(t *testing.T) {
 	}
 	assertTestBooks(t, bookList)
 }
+
+func TestGetCopies_OnClientReturnsCopiesForBook(t *testing.T) {
+	t.Parallel()
+	client := getTestClient(t)
+	copies, err := client.GetCopies("abc")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if copies != 1 {
+		t.Fatalf("want 1 copy, got %d", copies)
+	}
+}
+
+func TestGetCopies_OnClientErrorsWhenBookNotFound(t *testing.T) {
+	t.Parallel()
+	client := getTestClient(t)
+	_, err := client.GetCopies("bogus")
+	if err == nil {
+		t.Error("want error when book not found, got nil")
+	}
+}
