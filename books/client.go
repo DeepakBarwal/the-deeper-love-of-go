@@ -77,3 +77,13 @@ func (client *Client) AddCopies(ID string, copies int) (int, error) {
 	}
 	return stock, nil
 }
+
+func (client *Client) SubCopies(ID string, copies int) (int, error) {
+	URI := fmt.Sprintf("/subcopies/%s/%d", ID, copies)
+	stock := 0
+	err := client.MakeAPIRequest(URI, &stock)
+	if err != nil {
+		return 0, err
+	}
+	return stock, nil
+}

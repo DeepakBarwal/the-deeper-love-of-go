@@ -2,6 +2,7 @@ package books
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"maps"
 	"os"
@@ -130,6 +131,23 @@ func (catalog *Catalog) AddCopies(ID string, copies int) (int, error) {
 		return 0, fmt.Errorf("ID %q not found", ID)
 	}
 	book.Copies += copies
+	catalog.data[ID] = book
+	return book.Copies, nil
+}
+
+var ErrNotEnoughStock = errors.New("not enough stock")
+
+func (catalog *Catalog) SubCopies(ID string, copies int) (int, error) {
+	catalog.mu.Lock()
+	defer catalog.mu.Unlock()
+	book, ok := catalog.data[ID]
+	if !ok {
+		return 0, fmt.Errorf("ID %q not found", ID)
+	}
+	if book.Copies < copies {
+		return 0, fmt.Errorf("%w: %d", ErrNotEnoughStock, book.Copies)
+	}
+	book.Copies -= copies
 	catalog.data[ID] = book
 	return book.Copies, nil
 }
