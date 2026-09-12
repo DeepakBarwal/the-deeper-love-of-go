@@ -248,7 +248,7 @@ func TestServer_ListsAllBooks(t *testing.T) {
 			panic(err)
 		}
 	}()
-	resp, err := http.Get("http://" + addr + "/list")
+	resp, err := http.Get("http://" + addr + "/v1/list")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -289,7 +289,7 @@ func TestServer_FindsBookByID(t *testing.T) {
 			panic(err)
 		}
 	}()
-	resp, err := http.Get("http://" + addr + "/find/abc")
+	resp, err := http.Get("http://" + addr + "/v1/find/abc")
 	if err != nil {
 		t.Fatal(err)
 	}

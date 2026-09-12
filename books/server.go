@@ -8,7 +8,7 @@ import (
 
 func ListenAndServe(addr string, catalog *Catalog) error {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/list",
+	mux.HandleFunc("/v1/list",
 		func(w http.ResponseWriter, r *http.Request) {
 			books := catalog.GetAllBooks()
 			err := json.NewEncoder(w).Encode(books)
@@ -16,7 +16,7 @@ func ListenAndServe(addr string, catalog *Catalog) error {
 				panic(err)
 			}
 		})
-	mux.HandleFunc("/find/{id}",
+	mux.HandleFunc("/v1/find/{id}",
 		func(w http.ResponseWriter, r *http.Request) {
 			ID := r.PathValue("id")
 			book, ok := catalog.GetBook(ID)

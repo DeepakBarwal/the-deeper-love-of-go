@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	resp, err := http.Get("http://localhost:3000")
+	resp, err := http.Get("http://localhost:3000/v1/list")
 	if err != nil {
 		fmt.Println(err)
 		return
