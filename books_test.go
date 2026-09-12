@@ -388,3 +388,13 @@ func TestGetBook_FindReturnsErrorWhenBookNotFound(t *testing.T) {
 		t.Error("want error when book not found, got nil")
 	}
 }
+
+func TestGetAllBooks_OnClientListsAllBooks(t *testing.T) {
+	t.Parallel()
+	client := getTestClient(t)
+	bookList, err := client.GetAllBooks()
+	if err == nil {
+		t.Fatal(err)
+	}
+	assertTestBooks(t, bookList)
+}
