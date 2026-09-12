@@ -337,3 +337,54 @@ func TestServer_FindReturnsNotFoundWhenBookNotFound(t *testing.T) {
 		t.Fatalf("unexpected status %d", resp.StatusCode)
 	}
 }
+
+func TestGetBook_OnClientFindsBookByID(t *testing.T) {
+	t.Parallel()
+	client := getTestClient(t)
+	got, err := client.GetBook("abc")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got != ABC {
+		t.Fatalf("want %#v, got %#v", ABC, got)
+	}
+}
+
+func getTestClient(t *testing.T) *books.Client {
+	t.Helper()
+	addr := randomLocalAddr(t)
+	catalog := getTestCatalog()
+	catalog.Path = t.TempDir() + "/catalog"
+	go func() {
+		err := books.ListenAndServe(addr, catalog)
+		if err != nil {
+			panic(err)
+		}
+	}()
+	return books.NewClient(addr)
+}
+
+var (
+	ABC = books.Book{
+		Title:  "In the Company of Cheerful Ladies",
+		Author: "Alexander McCall Smith",
+		Copies: 1,
+		ID:     "abc",
+	}
+
+	XYZ = books.Book{
+		Title:  "White Heat",
+		Author: "Dominic Sandbrook",
+		Copies: 2,
+		ID:     "xyz",
+	}
+)
+
+func TestGetBook_FindReturnsErrorWhenBookNotFound(t *testing.T) {
+	t.Parallel()
+	client := getTestClient(t)
+	_, err := client.GetBook("bogus")
+	if err == nil {
+		t.Error("want error when book not found, got nil")
+	}
+}
