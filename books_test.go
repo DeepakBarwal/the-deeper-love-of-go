@@ -277,3 +277,42 @@ func randomLocalAddr(t *testing.T) string {
 	defer l.Close()
 	return l.Addr().String()
 }
+
+func TestServer_FindsBookByID(t *testing.T) {
+	t.Parallel()
+	addr := randomLocalAddr(t)
+	catalog := getTestCatalog()
+	catalog.Path = t.TempDir() + "/catalog"
+	go func() {
+		err := books.ListenAndServe(addr, catalog)
+		if err != nil {
+			panic(err)
+		}
+	}()
+	resp, err := http.Get("http://" + addr + "/find/abc")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		t.Fatalf("unexpected status %d", resp.StatusCode)
+	}
+	got := books.Book{}
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = json.Unmarshal(data, &got)
+	if err != nil {
+		t.Fatalf("%v in %q", err, data)
+	}
+	want := books.Book{
+		Title:  "In the Company of Cheerful Ladies",
+		Author: "Alexander McCall Smith",
+		Copies: 1,
+		ID:     "abc",
+	}
+	if want != got {
+		t.Fatalf("want %#v, got %#v", want, got)
+	}
+}
